@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane
+        xmlns="http://javafx.com/javafx/23.0.1"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="com.example.bdsqltester.scenes.admin.showGradeController"
+        prefHeight="400.0" prefWidth="600.0">
+
+    <children>
+        <Label fx:id="titleLabel" layoutX="180.0" layoutY="25.0" prefHeight="39.0" prefWidth="240.0" text="User's Grades">
+            <font>
+                <Font size="24.0" />
+            </font>
+        </Label>
+
+        <TableView fx:id="gradeTable" layoutX="83.0" layoutY="68.0" prefHeight="264.0" prefWidth="434.0">
+            <columns>
+                <TableColumn fx:id="usernameColumn" prefWidth="222.0" text="Username" />
+                <TableColumn fx:id="gradeColumn" prefWidth="211.0" text="Grade" />
+            </columns>
+        </TableView>
+    </children>
+</AnchorPane>

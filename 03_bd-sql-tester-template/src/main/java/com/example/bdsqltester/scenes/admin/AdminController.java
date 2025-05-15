@@ -1,5 +1,6 @@
 package com.example.bdsqltester.scenes.admin;
 
+import com.example.bdsqltester.HelloApplication;
 import com.example.bdsqltester.datasources.GradingDataSource;
 import com.example.bdsqltester.datasources.MainDataSource;
 import com.example.bdsqltester.dtos.Assignment;
@@ -12,9 +13,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
 
 import java.sql.*;
 import java.util.ArrayList;
+
+import javafx.scene.Parent;
+import javafx.scene.Node;
+
+import java.io.IOException;
 
 public class AdminController {
 
@@ -176,18 +183,62 @@ public class AdminController {
         refreshAssignmentList();
     }
 
-    @FXML
-    void onShowGradesClick(ActionEvent event) {
-        // Make sure id is set
-        if (idField.getText().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("No Assignment Selected");
-            alert.setContentText("Please select an assignment to view grades.");
-            alert.showAndWait();
-            return;
-        }
+//    @FXML
+//    void onShowGradesClick(ActionEvent event) {
+//        // Validasi: ID field harus terisi
+//        if (idField.getText().isEmpty()) {
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Error");
+//            alert.setHeaderText("No Assignment Selected");
+//            alert.setContentText("Please select an assignment to view grades.");
+//            alert.showAndWait();
+//            return;
+//        }
+//
+//        try {
+//            // Load FXML tujuan
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/bdsqltester/scenes/showGrades.fxml"));
+//            Parent root = loader.load();
+////
+////            // (Opsional) kirim ID assignment ke controller tujuan
+////            showGradeController controller = loader.getController();
+////            controller.setAssignmentId(idField.getText()); // method ini kamu buat sendiri
+//
+//            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//            stage.setScene(new Scene(root));
+//            stage.show();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+@FXML
+void onShowGradesClick(ActionEvent event) {
+    if (idField.getText().isEmpty()) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("No Assignment Selected");
+        alert.setContentText("Please select an assignment to view grades.");
+        alert.showAndWait();
+        return;
     }
+
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/bdsqltester/admin-showGrade.fxml"));
+        Parent root = loader.load();
+
+        AdminShowGradesController controller = loader.getController();
+        controller.setAssignmentId(idField.getText());
+
+        Stage stage = new Stage();
+        stage.setTitle("Assignment Grades");
+        stage.setScene(new Scene(root));
+        stage.show();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
+
 
     @FXML
     void onTestButtonClick(ActionEvent event) {
@@ -286,5 +337,61 @@ public class AdminController {
         }
     } // End of onTestButtonClick method
 
+    @FXML
+    void deleteAssignment(ActionEvent event) {
+        // Cek apakah ada item yang dipilih
+        Assignment selected = assignmentList.getSelectionModel().getSelectedItem();
+
+        if (selected == null || idField.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Selection");
+            alert.setHeaderText("No Assignment Selected");
+            alert.setContentText("Please select an assignment from the list to delete.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Tampilkan konfirmasi
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirm Deletion");
+        confirm.setHeaderText("Delete Assignment");
+        confirm.setContentText("Are you sure you want to delete this assignment?");
+
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try (Connection c = MainDataSource.getConnection()) {
+                    PreparedStatement stmt = c.prepareStatement("DELETE FROM assignments WHERE id = ?");
+                    stmt.setLong(1, selected.id);
+                    int affectedRows = stmt.executeUpdate();
+
+                    if (affectedRows > 0) {
+                        // Clear form & refresh list
+                        idField.clear();
+                        nameField.clear();
+                        instructionsField.clear();
+                        answerKeyField.clear();
+                        refreshAssignmentList();
+
+                        Alert info = new Alert(Alert.AlertType.INFORMATION);
+                        info.setTitle("Deleted");
+                        info.setHeaderText(null);
+                        info.setContentText("Assignment successfully deleted.");
+                        info.showAndWait();
+                    } else {
+                        Alert error = new Alert(Alert.AlertType.ERROR);
+                        error.setTitle("Delete Failed");
+                        error.setHeaderText("Assignment not found or already deleted.");
+                        error.showAndWait();
+                    }
+                } catch (Exception e) {
+                    Alert error = new Alert(Alert.AlertType.ERROR);
+                    error.setTitle("Database Error");
+                    error.setHeaderText("An error occurred while deleting the assignment.");
+                    error.setContentText(e.getMessage());
+                    error.showAndWait();
+                }
+            }
+        });
+    }
 
 }

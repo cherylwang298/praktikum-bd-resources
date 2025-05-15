@@ -2,6 +2,7 @@ package com.example.bdsqltester.scenes;
 
 import com.example.bdsqltester.HelloApplication;
 import com.example.bdsqltester.datasources.MainDataSource;
+import com.example.bdsqltester.session.session;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -46,6 +47,8 @@ public class LoginController {
                 String dbPassword = rs.getString("password");
 
                 if (dbPassword.equals(password)) {
+                    int userId = rs.getInt("id");
+                    session.setUserId(userId);
                     return true; // Credentials are valid
                 }
             }
@@ -84,7 +87,12 @@ public class LoginController {
                     app.getPrimaryStage().setScene(scene);
                 } else {
                     // Load the user view
-                    app.getHostServices().showDocument("user-view.fxml");
+                    app.getPrimaryStage().setTitle("User View");
+
+                    // Load fxml and set the scene
+                    FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("user-view.fxml"));
+                    Scene scene = new Scene(loader.load());
+                    app.getPrimaryStage().setScene(scene);
                 }
             } else {
                 // Show an error message

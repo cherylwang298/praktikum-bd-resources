@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<SplitPane dividerPositions="0.6113013698630136" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bdsqltester.scenes.user.UserController">
+    <items>
+        <VBox alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+            <children>
+                <ButtonBar prefHeight="40.0" prefWidth="200.0" />
+                <ListView fx:id="assignmentList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                    <VBox.margin>
+                        <Insets top="8.0" />
+                    </VBox.margin>
+                </ListView>
+<!--                <ListView fx:id="assignmentList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">-->
+<!--                    <VBox.margin>-->
+<!--                        <Insets top="8.0" />-->
+<!--                    </VBox.margin>-->
+<!--                </ListView>-->
+
+            </children>
+        </VBox>
+        <VBox prefHeight="200.0" prefWidth="100.0">
+            <children>
+                <HBox prefWidth="200.0" spacing="8.0" />
+                <Label text="Instructions">
+                    <padding>
+                        <Insets top="8.0" />
+                    </padding>
+                </Label>
+                <TextArea fx:id="instructionsField" prefHeight="110.0" prefWidth="208.0" />
+                <Label text="Your Answer:">
+                    <padding>
+                        <Insets top="8.0" />
+                    </padding>
+                </Label>
+                <TextArea fx:id="answerField" prefHeight="125.0" prefWidth="208.0" />
+            <HBox prefHeight="48.0" prefWidth="208.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onShowGradeClick" text="Show Grade" />
+                  <Button mnemonicParsing="false" onAction="#onTestButtonClick" prefHeight="25.0" prefWidth="61.0" text="Test" />
+                  <Button mnemonicParsing="false" onAction="#onSaveClick" prefHeight="25.0" prefWidth="61.0" text="Save" />
+               </children>
+            </HBox>
+            </children>
+            <padding>
+                <Insets left="8.0" right="8.0" />
+            </padding>
+        </VBox>
+    </items>
+    <padding>
+        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+    </padding>
+</SplitPane>
